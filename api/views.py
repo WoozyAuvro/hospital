@@ -3,8 +3,17 @@ from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from .models import esp, espTemp
 import subprocess, os, threading
+from .ai import process_chatbot_input as sendPatientPrompt, jsonContent
 #from sheeesh import main, compare
-
+def ai(request):
+    if request.method == 'POST':
+        prompt = request.POST.get('prompt')
+        response = sendPatientPrompt(prompt=prompt)
+        rep = jsonContent(response.content)
+        return render(request, 'chatbot.html', {"response": rep})
+    else:
+        # Render the initial chatbot interface template
+        return render(request, 'chatbot.html')
 def get_last_10_temperature_data(request):
     # Retrieve the last 10 temperature data points from the database
     temperature_data = espTemp.objects.all().order_by('-created')[:10]

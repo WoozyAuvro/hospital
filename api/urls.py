@@ -15,4 +15,5 @@ urlpatterns = [
     path('api/get-last-10-temperature-data/', views.get_last_10_temperature_data, name='get_last_10_temperature_data'),
     path('api/get-last-10-gas-data/', views.get_last_10_gas_data, name='get_last_10_gas_data'),
     path('api/patient/ai/', views.ai, name='ai'),
+    path('api/patient/aish/', views.aish, name='aish'),
 ]

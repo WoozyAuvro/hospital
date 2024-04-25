@@ -5,12 +5,20 @@ from .models import esp, espTemp
 import subprocess, os, threading
 from .ai import process_chatbot_input as sendPatientPrompt, jsonContent
 #from sheeesh import main, compare
+
+def aish(request):
+    response = "gotchu"
+    return JsonResponse({"text": response})
+    
 def ai(request):
     if request.method == 'POST':
         prompt = request.POST.get('prompt')
+        if prompt == "":
+            return render(request, 'chatbot.html')
+        print(prompt)
         response = sendPatientPrompt(prompt=prompt)
-        rep = jsonContent(response.content)
-        return render(request, 'chatbot.html', {"response": rep})
+        #response = prompt
+        return render(request, 'chatbot.html', {"response": response})
     else:
         # Render the initial chatbot interface template
         return render(request, 'chatbot.html')

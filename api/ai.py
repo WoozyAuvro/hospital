@@ -15,16 +15,16 @@ def process_chatbot_input(prompt):
     client = OpenAI()
 
     response = client.chat.completions.create(
-    model="gpt-4-vision-preview",
+    model="gpt-3.5-turbo-0125",
     messages=[
         {
         "role": "user",
         "content": [
-            {"type": "text", "text": "answer based on medical terms: {prompt}"},
+            {"type": "text", "text": f"you are a medical assistant. answer this question: {prompt}"},
         ],
         }
     ],
-    max_tokens=300,
+    max_tokens=30,
     )
     resp= response.choices[0].message.content
     print(resp)

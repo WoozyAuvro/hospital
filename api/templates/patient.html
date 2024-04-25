@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Home{% endblock %}
+
+{% block content %}
+<br><br><br>
+<h1 style="text-align: center;"></h1>
+<br><br>
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-4">
+            <a href="{% url 'checkin' %}">
+                <div class="box">
+                    <label for="checkin" style="color: rgb(68, 68, 68);"><h3>Check In</h3></label><br>
+                    <img src="{% static 'checkin.png' %}" alt="doctah" width="60" height="60">
+                </div>
+            </a>
+        </div>
+        <div class="col-md-4">
+            <a href="{% url 'home' %}">
+                <div class="box">
+                    <label for="patient" style="color: rgb(68, 68, 68);"><h3>Make Appointment</h3></label><br>
+                    <img src="{% static 'make-appointment.png' %}" alt="patientah" width="60" height="60">
+                </div>
+            </a>
+        </div>
+    </div>
+</div><br><br>
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-4">
+            <a href="{% url 'home' %}">
+                <div class="box">
+                    <label for="checkin" style="color: rgb(68, 68, 68);"><h3>AI Assistance</h3></label><br>
+                    <img src="{% static 'ai.jpg' %}" alt="doctah" width="60" height="60">
+                </div>
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

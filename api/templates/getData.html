@@ -1,0 +1,243 @@
+<!-- Your template file -->
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Sensor Data{% endblock %}
+
+{% block content %}
+<br><br><br>
+<h1 style="text-align: center;">Temperature Data</h1>
+<br><br>
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Temperature</th>
+                        <th>Last Updated</th>
+                    </tr>
+                </thead>
+                <tbody id="temperature-data-body">
+                    <!-- Temperature data rows will be dynamically added here -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <canvas id="temperature-chart" width="400" height="200"></canvas>
+        </div>
+    </div>
+</div>
+<br><br><br>
+<h1 style="text-align: center;">Gas Data</h1>
+<br><br>
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Propane Level</th>
+                        <th>Time</th>
+                    </tr>
+                </thead>
+                <tbody id="gas-data-body">
+                    <!-- Gas data rows will be dynamically added here -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <canvas id="gas-chart" width="400" height="200"></canvas>
+        </div>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+$(document).ready(function() {
+    // Function to fetch last 10 temperature data from the server and update the temperature chart
+    function fetchLast10TemperatureData() {
+    $.ajax({
+        url: '/api/get-last-10-temperature-data/', // URL to your Django view to fetch last 10 temperature data
+        method: 'GET',
+        success: function(response) {
+            // Clear existing rows
+            //$('#temperature-data-body').empty();
+            
+            // Add new rows with the fetched temperature data
+            
+
+            // Extract data for the temperature chart
+            var temperatureValues = response.map(function(item) {
+                return item.temperature;
+            });
+            var timestamps = response.map(function(item) {
+                return item.created;
+            });
+
+            // Render temperature chart
+            renderTemperatureChart(temperatureValues, timestamps);
+        },
+        error: function(xhr, status, error) {
+            console.error('Error fetching last 10 temperature data:', error);
+        }
+    });
+}
+    function fetchTemperatureData() {
+        $.ajax({
+            url: '/api/get-temperature-data/', // URL to your Django view to fetch last 10 temperature data
+            method: 'GET',
+            success: function(response) {
+                // Clear existing rows
+                $('#temperature-data-body').empty();
+                // Add new rows with the fetched temperature data
+                $.each(response, function(index, item) {
+                    var row = $('<tr>');
+                    row.append($('<td>').text(item.data));
+                    row.append($('<td>').text(item.created));
+                    $('#temperature-data-body').append(row);
+                });
+
+                // Extract data for the temperature chart
+                var temperatureValues = response.map(function(item) {
+                    return item.data;
+                });
+                var timestamps = response.map(function(item) {
+                    return item.created;
+                });
+
+                // Render temperature chart
+                renderTemperatureChart(temperatureValues, timestamps);
+            },
+            error: function(xhr, status, error) {
+                console.error('Error fetching last 10 temperature data:', error);
+            }
+        });
+    }
+    // Function to fetch last 10 gas data from the server and update the gas chart
+    function fetchLast10GasData() {
+        $.ajax({
+            url: '/api/get-last-10-gas-data/', // URL to your Django view to fetch last 10 gas data
+            method: 'GET',
+            success: function(response) {
+                // Clear existing rows
+                
+                
+                // Add new rows with the fetched gas data
+
+                // Extract data for the gas chart
+                var gasValues = response.map(function(item) {
+                    return item.data;
+                });
+                var timestamps = response.map(function(item) {
+                    return item.created;
+                });
+
+                // Render gas chart
+                renderGasChart(gasValues, timestamps);
+            },
+            error: function(xhr, status, error) {
+                console.error('Error fetching last 10 gas data:', error);
+            }
+        });
+    }
+    function fetchGasData() {
+        $.ajax({
+            url: '/api/get-gas-data/', // URL to your Django view to fetch last 10 gas data
+            method: 'GET',
+            success: function(response) {
+                // Clear existing rows
+                $('#gas-data-body').empty();
+                // Add new rows with the fetched gas data
+                $.each(response, function(index, item) {
+                    var row = $('<tr>');
+                    row.append($('<td>').text(item.data));
+                    row.append($('<td>').text(item.created));
+                    $('#gas-data-body').append(row);
+                });
+
+                // Extract data for the gas chart
+                var gasValues = response.map(function(item) {
+                    return item.data;
+                });
+                var timestamps = response.map(function(item) {
+                    return item.created;
+                });
+
+                // Render gas chart
+                renderGasChart(gasValues, timestamps);
+            },
+            error: function(xhr, status, error) {
+                console.error('Error fetching last 10 gas data:', error);
+            }
+        });
+    }
+
+    // Function to render temperature chart
+    function renderTemperatureChart(temperatureValues, timestamps) {
+        var ctx = document.getElementById('temperature-chart').getContext('2d');
+        var myChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: timestamps,
+                datasets: [{
+                    label: 'Temperature Data',
+                    data: temperatureValues,
+                    borderColor: 'rgb(75, 192, 192)',
+                    tension: 0.1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    }
+
+    // Function to render gas chart
+    function renderGasChart(gasValues, timestamps) {
+        var ctx = document.getElementById('gas-chart').getContext('2d');
+        var myChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: timestamps,
+                datasets: [{
+                    label: 'Gas Data',
+                    data: gasValues,
+                    borderColor: 'rgb(255, 99, 132)',
+                    tension: 0.1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    }
+
+    // Fetch last 10 temperature data initially when the page loads
+    fetchLast10TemperatureData();
+    fetchTemperatureData();
+    // Fetch last 10 gas data initially when the page loads
+    fetchLast10GasData();
+    fetchGasData();
+    setInterval(fetchTemperatureData, 2000);
+    setInterval(fetchGasData, 2000);
+    // Periodically fetch last 10 temperature data every 2 seconds
+    setInterval(fetchLast10TemperatureData, 2000);
+
+    // Periodically fetch last 10 gas data every 2 seconds
+    setInterval(fetchLast10GasData, 2000);
+});
+</script>
+{% endblock %}

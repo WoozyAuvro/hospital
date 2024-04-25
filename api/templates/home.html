@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Home{% endblock %}
+
+{% block content %}
+<br><br><br>
+<h1 style="text-align: center;">DASHBOARD</h1>
+<br><br>
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-4">
+            <a href="{% url 'doctor' %}">
+                <div class="box">
+                    <label for="doctor" style="color: rgb(68, 68, 68);"><h3>Doctor</h3></label><br>
+                    <img src="{% static 'doctor.jpg' %}" alt="doctah" width="60" height="60">
+                </div>
+            </a>
+        </div>
+        <div class="col-md-4">
+            <a href="{% url 'patient' %}">
+                <div class="box">
+                    <label for="patient" style="color: rgb(68, 68, 68);"><h3>Patient</h3></label><br>
+                    <img src="{% static 'patient.png' %}" alt="patientah" width="60" height="60">
+                </div>
+            </a>
+        </div>
+        <div class="col-md-4">
+            <a href="{% url 'staff_data' %}">
+                <div class="box">
+                    <label for="staff" style="color: rgb(68, 68, 68);"><h3>Staff</h3></label><br>
+                    <img src="{% static 'staff.jpg' %}" alt="patientah" width="100" height="60">
+                </div>
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}
